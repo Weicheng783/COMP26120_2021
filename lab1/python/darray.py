@@ -1,6 +1,7 @@
 from enum import Enum
 import config
 import sys
+import math
 
 class darray:
     def __init__(self):
@@ -14,11 +15,47 @@ class darray:
         
         # changing the array means it may no longer be sorted
         self.sorted = False
+
+
         
     def find(self, value):
+            
+            # # if(array[start] == value):
+            # #     return True
+            # else:
+            #     if(math.floor((middle))/2 == 0 or math.floor((len(array)-middle)/2) == 0):
+            #         return False
+            #     if(array[start] < value):
+            #         print("right")
+            #         if(binary_search(array,middle+math.floor((len(array)-middle)/2),value) == False):
+            #         	return False
+            #         else:
+            #         	return True
+            #     else:
+            #         print("left")
+            #         if(binary_search(array,middle-math.floor((middle)/2),value) == False):
+            #         	return False
+            #         else:
+            #             return True
+                    
+            # return True
         if (self.mode == SearchModes.LINEAR_SEARCH.value):
             # TODO implement linear search through list
-            print("Linear search not yet implemented")
+            # print("Linear search not yet implemented")
+            # print(value)
+            for i in range(len(self.array)):
+            	# print("real ",self.array[i])
+            	# print("exp " ,value)
+            	if(self.array[i] == value):
+            		return True
+            	elif(i == len(self.array)-1):
+            		# print("printed real error")
+            		# print(str(i)+": "+str(value))
+            		return False
+            
+
+            # return False
+
         else:
             if (not self.sorted):
                 if (self.verbose > 0):
@@ -30,7 +67,27 @@ class darray:
                 
                 self.sorted = True
             # TODO implement binary search through array
+            # binary_search(self.array, math.floor(len(self.array)/2), value)
+            left = 0
+            right = len(self.array)-1
+            while left <= right:
+                print("left val:",left)
+                print("right val:", right)
+                j = math.floor((left+right)/2)
+                print("j val:",j)
+                print("needs val:", value)
+                if self.array[j] == value:
+                    print("this finds")
+                    return True
+                elif self.array[j] > value:
+                    print(self.array[j] > value)
+                    right = j-1
+                else:
+                    left = j+1
+            # return False
         return False
+
+
         
     def print_set(self):
         print("DArray:\n")
@@ -64,8 +121,24 @@ class darray:
         self.array[b] = temp
         
     def insertion_sort(self):
-        sys.stderr.write("Not implemented\n")
-        sys.exit(-1)
+        # sys.stderr.write("Not implemented\n")
+        # sys.exit(-1)
+        output = [self.array[0]]
+        for i in range(1,len(self.array)):
+            for j in range(len(output)):
+            	if(self.array[i] >= output[j]):
+            		# output.insert(j+1,self.array[i])
+            		if(j == len(output)-1):
+            			output.insert(j+1,self.array[i])
+            		else:
+            		    pass
+            	else:
+            		output.insert(j,self.array[i])
+            		break
+        
+        print(output)    
+
+
         
     # Hint: you probably want to define a help function for the recursive call    
     def quick_sort(self):

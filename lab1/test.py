@@ -38,11 +38,13 @@ for mode in range(0,last_mode+1):
  start = time.time()
  for test in sorted(os.listdir('data/'+problems)) :
   testdir = 'data/'+problems+'/'+test
+  # print(testdir)
   if os.path.isdir(testdir): 
     with open(testdir+'/ans') as ans:
       ans_lines = ans.read().splitlines()
 
       print("Testing "+test)
+      
       process = Popen(commands+['-d',testdir+'/dict','-m',str(mode),testdir+'/infile'], stdout=PIPE, stderr=PIPE)
       looking = False
       for line in process.stdout.readlines():
@@ -57,13 +59,17 @@ for mode in range(0,last_mode+1):
           looking = False
         elif looking:
           if len(ans_lines) == 0:
+
             print("Test failed. Reported "+line+" when no more spelling errors expected")
           elif ans_lines[0] != line:
+            # print(ans_lines[0])
+            # print(line)
             print("Test failed. Expected "+ans_lines[0]+" but got "+line)
           else:
             ans_lines = ans_lines[1:]
          
       if len(ans_lines) > 0:
+         # print(ans_lines)
          print("Test failed. Expected more spelling errors") 
          print("First missing line: "+ans_lines[0])
  end = time.time()
