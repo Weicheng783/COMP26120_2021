@@ -48,9 +48,11 @@ for mode in range(0,last_mode+1):
       for line in process.stdout.readlines():
         line = line.strip().decode("utf-8").strip('\x00')
         #Skip blank lines in the output
+        print(line)
         if len(line) == 0 : 
            continue
         # We depend on particular bits of the output occuring either side of the spelling errors
+        # print(line)
         if "Spellchecking:" in line:
           looking = True
         elif "Usage statistics:" in line:

@@ -11,7 +11,7 @@ Initial Expectations
 ------------------------
 
 
->> Do you expect this data structure to be preferable to the others on all inputs, most  inputs, some inputs? Why?
+>> Do you expect this data structure to be preferable to the others on all inputs, most inputs, some inputs? Why?
 
 
 
