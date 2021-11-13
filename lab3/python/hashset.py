@@ -3,22 +3,6 @@ import config
 import math
 
 class hashset:
-    def __init__(self):
-        # TODO: create initial hash table
-        self.verbose = config.verbose
-        self.mode = config.mode
-        self.hash_table_size = config.init_size
-        self.collisions = 0
-        self.total_obj = 0
-        self.load_factor = 0.0
-
-        self.hasharray = [None]*self.hash_table_size
-        # self.hasharray = [None]*5
-        # self.hash_table_size = 5
-        # self.mode = 1
-        # print(hasharray)
-
-    # Helper functions for finding prime numbers
     def isPrime(self, n):
         i = 2
         while (i * i < n):
@@ -31,6 +15,33 @@ class hashset:
         while (not self.isPrime(n)):
             n = n + 1
         return n
+
+    def previousPrime(self, n):
+        while (not self.isPrime(n)):
+            n = n - 1
+        return n
+
+    def __init__(self):
+        # TODO: create initial hash table
+        self.verbose = config.verbose
+        self.mode = config.mode
+        self.hash_table_size = config.init_size
+        self.collisions = 0
+        self.total_obj = 0
+        self.load_factor = 0.0
+
+        # self.hasharray = [None]*5
+        # self.hash_table_size = 5
+        self.hasharray = [None]*self.hash_table_size
+
+        self.double_hashing_value = self.previousPrime(self.hash_table_size)
+        # print(self.double_hashing_value)
+        # print(self.double_hashing_value)
+
+        self.mode = 2
+        # print(hasharray)
+
+    # Helper functions for finding prime numbers
         
     def insert(self, value):
         # TODO code for inserting into hash table
@@ -47,7 +58,6 @@ class hashset:
         if(self.load_factor >= 0.6):
             flag = 2
         if(flag != 2):
-            print("Entered: ",value)
             if(self.hasharray[value%self.hash_table_size] == None):
                 if(self.load_factor >= 0.6):
                     flag = 2
@@ -60,7 +70,7 @@ class hashset:
                 collisions = 0
                 index = value%self.hash_table_size
 
-                loop_quadratic = 1 # This value is only used in Quadratic Probing
+                loop_quadratic = 1 # This value is used in Quadratic Probing & Double Hashing
                 
                 while(self.hasharray[index] != None):
                     if(self.load_factor >= 0.6):
@@ -92,9 +102,18 @@ class hashset:
                             index = (index+((loop_quadratic)**2)) % self.hash_table_size
                         else:
                             index += ((loop_quadratic)**2)
-                        loop_quadratic += 1     
+                        loop_quadratic += 1
 
-                if(flag != 1 and flag != 2):
+                    elif(self.mode == HashingModes.HASH_1_DOUBLE_HASHING.value):
+                        
+                        if( self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] != None):
+                            collisions += 1
+                            loop_quadratic += 1
+                        else:
+                            self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] = value
+                            break
+
+                if(flag != 1 and flag != 2 and self.mode != HashingModes.HASH_1_DOUBLE_HASHING.value):
                     # print("reallocated at: ", index)
                     self.hasharray[index] = value
                     self.total_obj += 1
@@ -130,7 +149,6 @@ class hashset:
 
         index = value%self.hash_table_size
         loop_quadratic = 1
-        loop_quadratic_recorder = [None]*self.hash_table_size
         while(self.hasharray[index] != value):
             if(self.mode == HashingModes.HASH_1_LINEAR_PROBING.value):
                 if(index == self.hash_table_size-1):
@@ -141,16 +159,39 @@ class hashset:
                     # print("Not Found!")
                     return False
             elif(self.mode == HashingModes.HASH_1_QUADRATIC_PROBING.value):
+                # if(value in self.hasharray):
+                #     return True
+                # else:
+                #     return False
                 if(index+((loop_quadratic)**2) >= self.hash_table_size-1):
                     index = (index+((loop_quadratic)**2)) % self.hash_table_size
                 else:
                     index += ((loop_quadratic)**2)
-                if(loop_quadratic_recorder == self.hasharray):
+                if(loop_quadratic == self.hash_table_size):
                     return False
-                else:
-                    loop_quadratic_recorder[index] = self.hasharray[index]
-                    # print(loop_quadratic_recorder)
                 loop_quadratic += 1
+            elif(self.mode == HashingModes.HASH_1_DOUBLE_HASHING.value):
+                if( self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] != value):
+                    if(loop_quadratic == self.hash_table_size):
+                        return False
+                    loop_quadratic += 1
+                else:
+                    return True
+                # if(index+((loop_quadratic)**2) >= self.hash_table_size-1):
+                #     index = (index+((loop_quadratic)**2)) % self.hash_table_size
+                # else:
+                #     index += ((loop_quadratic)**2)
+                # if(loop_quadratic_recorder == self.hasharray):
+                #     return False
+                # else:
+                #     loop_quadratic_recorder[index] = self.hasharray[index]
+                #     # print(loop_quadratic_recorder)
+                # loop_quadratic += 1
+                # print("!index: ",index)
+                # loop_quadratic_recorder = self.hasharray
+                # # print("!Arrayis: ", self.hasharray)
+                # print("=?:", loop_quadratic_recorder == self.hasharray)
+                # return True
 
         # print(self.hasharray)
         # print("Found at: ", index)
