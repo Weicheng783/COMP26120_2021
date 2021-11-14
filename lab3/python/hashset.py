@@ -17,6 +17,7 @@ class hashset:
         return n
 
     def previousPrime(self, n):
+        n = n - 1
         while (not self.isPrime(n)):
             n = n - 1
         return n
@@ -30,15 +31,15 @@ class hashset:
         self.total_obj = 0
         self.load_factor = 0.0
 
-        # self.hasharray = [None]*5
-        # self.hash_table_size = 5
+        # self.hasharray = [None]*7
+        # self.hash_table_size = 7
         self.hasharray = [None]*self.hash_table_size
 
         self.double_hashing_value = self.previousPrime(self.hash_table_size)
         # print(self.double_hashing_value)
         # print(self.double_hashing_value)
 
-        self.mode = 2
+        # self.mode = 2
         # print(hasharray)
 
     # Helper functions for finding prime numbers
@@ -239,7 +240,7 @@ class HashingModes(Enum):
     HASH_2_DOUBLE_HASHING=6
     HASH_2_SEPARATE_CHAINING=7
 
-# aa = hashset()
+aa = hashset()
 # aa.insert("asdfghj")
 # aa.insert("jhgfdsa")
 # aa.insert("asdfghk")
