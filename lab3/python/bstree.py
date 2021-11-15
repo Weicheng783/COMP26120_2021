@@ -127,7 +127,7 @@ class bstree:
         # TODO update code to record and print statistic
         print("Tree Height: ", self.height)
         print("The average number of comparisons per insertion or find: ", self.average_stat)
-     
+
 # aa = bstree()
 # aa.insert("aaa")
 # print(aa.find("aaa"))
