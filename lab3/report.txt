@@ -1,4 +1,4 @@
-Name: 
+Name: Weicheng Ao
 
 
 This file has been provided to help you structure your thoughts when discussing Lab 3, Part c with your marker. Some questions can be answered with a single sentence, some may require much longer answers. You are free to edit/rearrange this file as much as you want.
@@ -13,39 +13,60 @@ Initial Expectations
 
 >> Do you expect this data structure to be preferable to the others on all inputs, most inputs, some inputs? Why?
 
+1. Dynamic Array with Sorting:
+This data structure is more preferable to the others on some inputs, and when the inputs' pattern more diverse, seems more random. And very good for the inputs number that is not exceeds the array size. (This is because the Dynamic Array is a fixed size initially, if there are no space available, we need to expand the size by a factor of two normally, this costs a lot of memory in the scale of  O(n). But for the access it takes O(1) time complexity on average to find a particular element.)
 
+2. Binary Trees:
+This data structure is more preferable to the others on most inputs, as it constructs by using orders.
+
+3. Hash Set with Linear Probing:
+This data structure is more preferable to the others on some inputs, and for these inputs are not repeated for a hash value.
+
+4. Hash Set with Separate Chaining:
+This data structure is more preferable to the others on most inputs as in this case, the rehashing could become less often.
 
 >> Do you expect your answer to change if the order of the words in your input dictionary is in the best/worst case? Why?
+
+In the best case, we expect every implementation takes O(1) time, this is a constant, hence in this case, we can use any structure.
+In the worst case, we need to consider these implementations one by one.
+For binary trees, the worst case happens when the inputs are monotonus, say gradually larger or gradually smaller. In such case, the tree is build from one side, say right or left. So either inserting or searching takes O(n) time.
+For dynamic array with sorting performed, the worst case arises when the sorting needs to take most of the time, when the data is descending ordered, say O(n^2) for insertion sort, the comparison could be 0.5n*(n-1) times.
+For hash set with linear probing, the worst case is where all data evaluate to the same hash value, this makes the insertion and finding more memory demanding and degrades to the linear search where the complexity is O(n).
+For hash set with separate chaining, the worst case is also when all data evaluate to the same hash value, it then becomes linear search, which takes O(n) time.
+
+All in all, in terms of performance in the worst cases, I prefer to use binary trees, hash set with linear probing and hash set with separate chaining instead of using dynamic array with sorting (when the sorting behaves badly).
 
 
 
 >> Can you phrase what you expect in terms of a one or two sentence hypothesis that you can test?
 
+In terms of timing costs:
+For the worst case, I expect binary trees, hash set with linear probing and hash set with separate chaining performances nearly the same, the dynamic array would be cost a little more amount of time. For the best case, I expect hash set performs better than the others. For all random generated inputs, we need to consider their average complexity cases.
 
 ------------------------
 Experimental Design
 ------------------------
 
-
 >> How are you going to define what it means for one data stucture to be preferable to another?
 
-
+In terms of time. If one data structure is preferable to another, it will be reflected through its timing. The better it behaves, the faster it runs and spend less time to finish.
 
 >> Which conditions will you vary in your experiment? 
 
-
+The amount of inputs and input patterns. I will use different data structures to run them also.
 
 >> How will you vary them? Why did you make these choices? Did you use theoretical complexities, best, worst and average cases to inform your decisions?
 
-
+I am going to generate different inputs pattern for each of the data structures, for each input pattern, the inputs are ordered differently especially/dedicately designed for testing their best cases ,worst cases and their average cases. Also I will vary the amount of inputs for testing small or large inputs for each value. Indeed I use their theoretical complexities to generate different input pattern, this may be able to reflect their truly performances.
 
 >> How will you generate the data for your experiments?
 
-
+Through a data generator, or manual type data in a file.
+I will vary the amount of inputs first for each different data structures and then vary the pattern of inputs (asending or desending or random) for each of them.
 
 >> How will you validate your findings?
 
-
+I will repeat the experiments seveal times for each test, in order to find an average approximated value.
 
 ------------------------
 Results and Analysis

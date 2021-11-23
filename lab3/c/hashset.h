@@ -32,6 +32,11 @@ struct  hashset
   int num_entries; // number of cells in_use
   //TODO add anything else that you need
   int collision;
+  int total_obj = 0;
+  double load_factor = 0.0;
+  int *hasharray;
+  int **hasharray1;
+  int double_hashing_value;
 };
 
 struct hashset* initialize_set (int size);     

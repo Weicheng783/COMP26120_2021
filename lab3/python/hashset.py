@@ -64,9 +64,9 @@ class hashset:
         # Flag meanings for 0: Normal insert; 1: Found duplicates; 2: Rehashing needed.
         flag = 0
         # Threshold 0.6 for open addressing, 0.8 for separate chaining.
-        if(self.load_factor >= 0.6 and (self.mode != HashingModes.HASH_1_SEPARATE_CHAINING.value and self.mode != HashingModes.HASH_2_SEPARATE_CHAINING.value)):
+        if(self.load_factor >= 0.75 and (self.mode != HashingModes.HASH_1_SEPARATE_CHAINING.value and self.mode != HashingModes.HASH_2_SEPARATE_CHAINING.value)):
             flag = 2
-        elif(self.load_factor >= 0.8 and (self.mode == HashingModes.HASH_1_SEPARATE_CHAINING.value or self.mode == HashingModes.HASH_2_SEPARATE_CHAINING.value)):
+        elif(self.load_factor >= 0.9 and (self.mode == HashingModes.HASH_1_SEPARATE_CHAINING.value or self.mode == HashingModes.HASH_2_SEPARATE_CHAINING.value)):
             flag = 2
         if(flag != 2):
             # Separate Chaining and Open Addressing follow different routes.
@@ -74,7 +74,7 @@ class hashset:
             if(self.mode != HashingModes.HASH_1_SEPARATE_CHAINING.value and self.mode != HashingModes.HASH_2_SEPARATE_CHAINING.value):
                 # Detect if a place has been occupied.
                 if(self.hasharray[value%self.hash_table_size] == None):
-                    if(self.load_factor >= 0.6):
+                    if(self.load_factor >= 0.75):
                         flag = 2
                     else:
                         self.hasharray[value%self.hash_table_size] = value
@@ -90,7 +90,7 @@ class hashset:
 
                     # Looping to find a suitable blank to put the value in.
                     while(self.hasharray[index] != None):
-                        if(self.load_factor >= 0.6):
+                        if(self.load_factor >= 0.75):
                             # Flag it to rehashing.
                             flag = 2
                             break
@@ -101,24 +101,34 @@ class hashset:
                             break
                         # Case Distinction for linear_probing, quadratic_probing, double_hashing.          
                         if(self.mode == HashingModes.HASH_1_LINEAR_PROBING.value or self.mode == HashingModes.HASH_2_LINEAR_PROBING.value):
-                            collisions += 1
-                            if(index == self.hash_table_size-1):
-                                index = 0
-                            else:
-                                index += 1
-                            if(index == value%self.hash_table_size):
-                                # No more space, rehashing needed, this is a special case.
-                                flag = 2
-                                break
-
+                            for i in range(1, self.hash_table_size+1):
+                                if(self.hasharray[(value+i)%self.hash_table_size] == None):
+                                    self.hasharray[(value+i)%self.hash_table_size] = value
+                                    flag = 1
+                                    self.total_obj += 1
+                                    self.load_factor = self.total_obj/len(self.hasharray)
+                                    break
+                                else:
+                                    collisions += 1
+                            break
                         elif(self.mode == HashingModes.HASH_1_QUADRATIC_PROBING.value or self.mode == HashingModes.HASH_2_QUADRATIC_PROBING.value):
-                            collisions += 1
-                            if(index+((loop_quadratic)**2) >= self.hash_table_size-1):
-                                index = (index+((loop_quadratic)**2)) % self.hash_table_size
-                            else:
-                                index += ((loop_quadratic)**2)
-                            loop_quadratic += 1
+                            # collisions += 1
+                            # if(index+((loop_quadratic)**2) >= self.hash_table_size-1):
+                            #     index = (index+((loop_quadratic)**2)) % self.hash_table_size
+                            # else:
+                            #     index += ((loop_quadratic)**2)
+                            # loop_quadratic += 1
 
+                            for i in range(1, self.hash_table_size+1):
+                                if(self.hasharray[(value+(i**2))%self.hash_table_size] == None):
+                                    self.hasharray[(value+(i**2))%self.hash_table_size] = value
+                                    flag = 1
+                                    self.total_obj += 1
+                                    self.load_factor = self.total_obj/len(self.hasharray)
+                                    break
+                                else:
+                                    collisions += 1
+                            break
                         elif(self.mode == HashingModes.HASH_1_DOUBLE_HASHING.value or self.mode == HashingModes.HASH_2_DOUBLE_HASHING.value):
 
                             if( self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] != None):
@@ -128,7 +138,7 @@ class hashset:
                                 self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] = value
                                 break
 
-                    if(flag != 1 and flag != 2 and (self.mode != HashingModes.HASH_1_DOUBLE_HASHING.value and self.mode != HashingModes.HASH_2_DOUBLE_HASHING.value)):
+                    if(flag != 1 and flag != 2 and (self.mode != HashingModes.HASH_1_LINEAR_PROBING.value and self.mode != HashingModes.HASH_1_DOUBLE_HASHING.value and self.mode != HashingModes.HASH_2_DOUBLE_HASHING.value)):
                         # We confirm the reallocation and update the array when it finds a place to put the value in.
                         self.hasharray[index] = value
                         self.total_obj += 1
@@ -201,21 +211,23 @@ class hashset:
             while(self.hasharray[index] != value):
                 # Open Addressing cases: linear_probing, quaratic_probing and double_hashing.
                 if(self.mode == HashingModes.HASH_1_LINEAR_PROBING.value or self.mode == HashingModes.HASH_2_LINEAR_PROBING.value):
-                    if(index == self.hash_table_size-1):
-                        index = 0
-                    else:
-                        index += 1
-                    if(index == value%self.hash_table_size):
-                        # Not Found
-                        return False
+                    for i in range(0, self.hash_table_size+1):
+                        if(self.hasharray[(value+i)%self.hash_table_size] == value):
+                            return True
+                        else:
+                            pass
+                    return False
                 elif(self.mode == HashingModes.HASH_1_QUADRATIC_PROBING.value or self.mode == HashingModes.HASH_2_QUADRATIC_PROBING.value):
-                    if(index+((loop_quadratic)**2) >= self.hash_table_size-1):
-                        index = (index+((loop_quadratic)**2)) % self.hash_table_size
-                    else:
-                        index += ((loop_quadratic)**2)
-                    if(loop_quadratic == self.hash_table_size):
-                        return False
-                    loop_quadratic += 1
+                    # index = (index+((loop_quadratic)**2)) % self.hash_table_size
+                    # if(loop_quadratic == self.hash_table_size):
+                    #     return False
+                    # loop_quadratic += 1
+                    for i in range(0, self.hash_table_size+1):
+                        if(self.hasharray[(value+(i**2))%self.hash_table_size] == value):
+                            return True
+                        else:
+                            pass
+                    return False
                 elif(self.mode == HashingModes.HASH_1_DOUBLE_HASHING.value or self.mode == HashingModes.HASH_2_DOUBLE_HASHING.value):
                     if(self.hasharray[(index+loop_quadratic*(value%self.double_hashing_value))%self.hash_table_size] != value):
                         if(loop_quadratic == self.hash_table_size):
@@ -245,7 +257,7 @@ class hashset:
         elif(self.hasharray != None):
             print("Hash Set Capacity: ", len(self.hasharray))
         print("Number of Collisions: ", self.collisions)
-        print("Current Load Factor: ", self.load_factor, " (threshold:0.6 or 0.8 for separate chaining)")
+        print("Current Load Factor: ", self.load_factor, " (threshold:0.75 or 0.9 for separate chaining)")
 
 # This is a cell structure assuming Open Addressing
 # It should contain and element that is the key and a state which is empty, in_use or deleted
