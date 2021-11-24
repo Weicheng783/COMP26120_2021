@@ -71,16 +71,16 @@ class darray:
             left = 0
             right = len(self.array)-1
             while left <= right:
-                print("left val:",left)
-                print("right val:", right)
-                j = math.floor((left+right)/2)
-                print("j val:",j)
-                print("needs val:", value)
+                # print("left val:",left)
+                # print("right val:", right)
+                j = int((left+right)/2)
+                # print("j val:",j)
+                # print("needs val:", value)
                 if self.array[j] == value:
-                    print("this finds")
+                    # print("this finds")
                     return True
                 elif self.array[j] > value:
-                    print(self.array[j] > value)
+                    # print(self.array[j] > value)
                     right = j-1
                 else:
                     left = j+1
