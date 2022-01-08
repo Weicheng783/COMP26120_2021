@@ -33,40 +33,40 @@ else:
 
 # Run the tests for each mode
 mode = last_mode
-# for mode in range(0,last_mode+1):
-print("Testing mode "+str(mode)+"...")
-# Let's time all the tests for each mode
-start = time.time()
-for test in sorted(os.listdir('data/'+problems)) :
-  testdir = 'data/'+problems+'/'+test
-  if os.path.isdir(testdir): 
-    with open(testdir+'/ans') as ans:
-      ans_lines = ans.read().splitlines()
+for mode in range(0,last_mode+1):
+  print("Testing mode "+str(mode)+"...")
+  # Let's time all the tests for each mode
+  start = time.time()
+  for test in sorted(os.listdir('data/'+problems)) :
+    testdir = 'data/'+problems+'/'+test
+    if os.path.isdir(testdir): 
+      with open(testdir+'/ans') as ans:
+        ans_lines = ans.read().splitlines()
 
-      print("Testing "+test)
-      process = Popen(commands+['-d',testdir+'/dict','-m',str(mode),testdir+'/infile'], stdout=PIPE, stderr=PIPE)
-      looking = False
-      for line in process.stdout.readlines():
-        line = line.strip().decode("utf-8").strip('\x00')
-        #Skip blank lines in the output
-        print(line)
-        if len(line) == 0 : 
-           continue
-        # We depend on particular bits of the output occuring either side of the spelling errors
-        if "Spellchecking:" in line:
-          looking = True
-        elif "Usage statistics:" in line:
-          looking = False
-        elif looking:
-          if len(ans_lines) == 0:
-            print("Test failed. Reported "+line+" when no more spelling errors expected")
-          elif ans_lines[0] != line:
-            print("Test failed. Expected "+ans_lines[0]+" but got "+line)
-          else:
-            ans_lines = ans_lines[1:]
-         
-      if len(ans_lines) > 0:
-         print("Test failed. Expected more spelling errors") 
-         print("First missing line: "+ans_lines[0])
-end = time.time()
-print("Took "+str(end-start)+" seconds")
+        print("Testing "+test)
+        process = Popen(commands+['-d',testdir+'/dict','-m',str(mode),testdir+'/infile'], stdout=PIPE, stderr=PIPE)
+        looking = False
+        for line in process.stdout.readlines():
+          line = line.strip().decode("utf-8").strip('\x00')
+          #Skip blank lines in the output
+          print(line)
+          if len(line) == 0 : 
+             continue
+          # We depend on particular bits of the output occuring either side of the spelling errors
+          if "Spellchecking:" in line:
+            looking = True
+          elif "Usage statistics:" in line:
+            looking = False
+          elif looking:
+            if len(ans_lines) == 0:
+              print("Test failed. Reported "+line+" when no more spelling errors expected")
+            elif ans_lines[0] != line:
+              print("Test failed. Expected "+ans_lines[0]+" but got "+line)
+            else:
+              ans_lines = ans_lines[1:]
+           
+        if len(ans_lines) > 0:
+           print("Test failed. Expected more spelling errors") 
+           print("First missing line: "+ans_lines[0])
+  end = time.time()
+  print("Took "+str(end-start)+" seconds")
