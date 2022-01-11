@@ -16,17 +16,22 @@ class enum_knapsack(knapsack):
         best_solution = [False]*(self.Nitems + 1) # (binary) solution veectore for best solution found
         j = 0.0
         
-        self.QUIET = False
+        # self.QUIET = False
+        self.QUIET = True
         best_value = 0 # total value packed in the best solution
-        
+
+        count = 0
         while (not self.next_binary(solution, self.Nitems)):
-            # ADD CODE IN HERE TO KEEP TRACK OF FRACTION OF ENUMERATION DONE
-            
+            # ADDED CODE for tracking count and update the best_value
+            count += 1
             # calculates the value and weight and feasibility
             infeasible = self.check_evaluate_and_print_sol(solution)
-            
-            # ADD CODE TO PRINT OUT BEST SOLUTION
-            
+            if(infeasible == False and best_value <= self.total_value):
+                best_value = self.total_value
+                best_solution = solution
+                print(str((count/(2**(self.Nitems)))*100)+" %, Current Best Value: " + str(best_value))
+            # ADDED CODE ALREADY
+        print("100 %, Current Best Value: " + str(best_value))
     def next_binary(self, sol, Nitems):
         # Called with a "binary" vector of length Nitmes, this
         # method "adds 1" to the vector, e.g. 0001 would turn to 0010.
