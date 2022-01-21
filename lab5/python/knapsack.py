@@ -45,7 +45,6 @@ class knapsack:
         start = self.temp_indexes.pop()
         self.temp_indexes.insert(0, start)
         
-        
         for i in range(1, self.Nitems + 1):
             print("%d\t%d\t" % (self.item_weights[self.temp_indexes[i]], self.item_values[self.temp_indexes[i]]), end="")
             print("%f" % (self.item_weights[self.temp_indexes[i]] / self.item_values[self.temp_indexes[i]]))

@@ -2,7 +2,7 @@ import sys
 
 from knapsack import knapsack
 
-DOUB_MAX = 10e30 # a large number, must be greater than  max value of any solution
+DOUB_MAX = 10e30 # a large number, must be greater than max value of any solution
 SIZE = 100000 # an estimate of how large the priority queue should become
 NITEMS = 2000 # an upper limit of the number of itmes
 
@@ -13,8 +13,10 @@ class struc_sol:
         # solution_vec[1] = False means first item is NOT in knapsack
         # soultion_vec[0] is meaningless
         
-        # objects of this class will also have self.val, self.bound and self.fixed for the value, upper bound of the solutoin and number of items fixed to either True (1) or False (0), not '*"
-        
+        # objects of this class will also have self.val, self.bound and self.fixed for the value, upper bound of the solution and number of items fixed to either True (1) or False (0), not '*"
+        self.val = 0
+        self.bound = 0
+        self.fixed = 0
     def copy(self):
         copy = struc_sol()
         for i in range(0, NITEMS + 1):
@@ -34,7 +36,7 @@ class bnb(knapsack):
     # They are based on the functions given in Robert Sedgwick's book, Algorithms in C
     
     def upheap(self, qsize):
-        # upheap reoders the elements in the heap (queue) afer an insertion
+        # upheap reoders the elements in the heap (queue) after an insertion
         
         temp_element = self.pqueue[qsize]
         self.pqueue[0].bound = DOUB_MAX
@@ -48,6 +50,7 @@ class bnb(knapsack):
         assert(self.QueueSize<SIZE-1)
         self.QueueSize = self.QueueSize+1
         self.pqueue[self.QueueSize]=element
+        # print(self.pqueue)
         self.upheap(self.QueueSize)
         
     def downheap(self,qindex):
@@ -106,23 +109,25 @@ class bnb(knapsack):
 
         # Everything above assumes items are sorted in decreasing
         # profit/weight ratio
-        
+
         totalp = 0 # profit total
         totalw =0 # weight total
         sol.val=-1
-        
+
         # compute the current value and weight of the fixed part
         for i in range (1, fix + 1):
             if (sol.solution_vec[i]):
                 totalw = totalw + self.item_weights[self.temp_indexes[i]]
                 totalp = totalp + self.item_values[self.temp_indexes[i]]
         if (totalw > self.Capacity):
-            return
-            
+            # return
+            return [False,False]
+
         sol.val = totalp
-        #   print("%g %d" % (totalp, totalw))
+        # print("%g %d" % (totalp, totalw))
+        # print(sol.val)
         
-        # add in tiems the rest of the items until capacity is exceeded
+        # add in items the rest of the items until capacity is exceeded
         i = fix + 1
         while (i <= self.Nitems and totalw < self.Capacity):
             totalw = totalw + self.item_weights[self.temp_indexes[i]]
@@ -134,11 +139,32 @@ class bnb(knapsack):
             i = i - 1
             totalp = totalp - ((totalw - self.Capacity)/(self.item_weights[self.temp_indexes[i]])*self.item_values[self.temp_indexes[i]])
         sol.bound = totalp
+        # print(sol.bound)
+        return [sol.val, sol.bound]
         
     def branch_and_bound(self, final_sol):
         self.pqueue[0] = struc_sol() # set a blank first element
-        
+
+        aaa = struc_sol()
+
+        aaa.solution_vec = final_sol
+
+        current = self.frac_bound(aaa,0)
+
+        aaa.val = current[0]
+        aaa.bound = current[1]
+
+        current_best = aaa.val
+        # return
+        # print(self.QueueSize)
+        self.insert(aaa)
+        print("CB ", current_best)
+
+        # print(self.QueueSize)
+
+        # print(current_best)
         # branch and bound
+        # return
 
         # start with the empty solution vector
         # compute its value and its bound
@@ -155,7 +181,113 @@ class bnb(knapsack):
         #       if value > current_best, set current_best to it, and copy child to final_sol
         #       add child to the queue
         # RETURN
-  
+        count = 0
+
+        while (self.QueueSize != 0 and self.pqueue[self.QueueSize].bound > current_best):
+            self.removeMax()
+            count += 1
+            onee = []
+            zeroe = []
+            # onee = final_sol
+            # zeroe = final_sol
+            # print(self.QueueSize)
+            # print(len(self.pqueue))
+            # onee[self.pqueue[self.QueueSize].fixed + 1] = True
+            # zeroe[self.pqueue[self.QueueSize].fixed + 1] = False
+
+            print("count", count)
+
+            for i in range(0,len(final_sol)):
+                if(i == count):
+                    onee.append(True)
+                elif(i < count):
+                    onee.append(final_sol[i])
+                else:
+                    onee.append(None)
+
+            for i in range(0,len(final_sol)):
+                if(i == count):
+                    zeroe.append(False)
+                elif(i < count):
+                    zeroe.append(final_sol[i])
+                else:
+                    zeroe.append(None)
+            print("onee",onee)
+            print("zeroe",zeroe)
+            # print("final",final_sol)
+
+            # print(numberr)
+            # onee[numberr] = True
+            # zeroe[numberr] = False
+            # print("onee",onee)
+
+            # print("fixed ",self.pqueue[self.QueueSize].fixed)
+
+            one = struc_sol()
+            one.solution_vec = onee
+
+            zero = struc_sol()
+            zero.solution_vec = zeroe
+            # self.print_sol(zero)
+            # print(self.pqueue[self.QueueSize].fixed + 1)
+            # print(onee)
+            # self.print_sol(one)
+            # self.print_sol(zero)
+            current0 = self.frac_bound(zero,count)
+            current1 = self.frac_bound(one,count)
+
+            if(current0[1] == False and current1[1] == False):
+                pass
+            elif(current1[1] == False):
+                if(current0[0] > current_best):
+                    zero.val = current0[0]
+                    zero.bound = current0[1]
+                    zero.fixed = count
+                    current_best = current0[0]
+                    final_sol = zero.solution_vec
+                    self.insert(zero)
+            elif(current0[1] == False):
+                if(current1[0] > current_best):
+                    one.val = current1[0]
+                    one.bound = current1[1]
+                    one.fixed = count
+                    current_best = current1[0]
+                    final_sol = one.solution_vec
+                    self.insert(one)
+            else:
+                current_best_cp = current_best
+                current_best1 = 0
+                current_best0 = 0
+                if(current1[0] > current_best_cp):
+                    one.val = current1[0]
+                    one.bound = current1[1]
+                    one.fixed = count
+                    current_best1 = current1[0]
+                else:
+                    print("1 failed", current1[0], "to", current_best)
+                # self.print_sol(one)
+                if(current0[0] > current_best_cp):
+                    zero.val = current0[0]
+                    zero.bound = current0[1]
+                    zero.fixed = count
+                    current_best0 = current0[0]
+                else:
+                    print("0 failed", current0[0], "to", current_best)
+
+                if(current_best1 >= current_best0):
+                    current_best = current_best1
+                    final_sol = one.solution_vec
+                    self.print_sol(one)
+                    self.insert(one)
+                else:
+                    current_best = current_best0
+                    final_sol = zero.solution_vec
+                    self.print_sol(zero)
+                    self.insert(zero)
+
+                # print(self.QueueSize + 1)
+        print("CB ", current_best)
+        return final_sol
 
         # YOUR CODE GOES HERE
         
@@ -174,7 +306,8 @@ knapsk.sort_by_ratio()
 
 knapsk.pqueue = [None]*SIZE
 
-knapsk.branch_and_bound(final_sol)
+final_sol = knapsk.branch_and_bound(final_sol)
+# print(final_sol)
 print("Branch and Bound Solution of Knapack is:")
 knapsk.check_evaluate_and_print_sol(final_sol)
 
