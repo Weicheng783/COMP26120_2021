@@ -15,10 +15,20 @@ class greedy(knapsack):
         self.sort_by_ratio() # sort by profit-to-weight ratio
         
         # ADD CODE HERE TO COMPUTE THE GREEDY SOLUTION
-        
+        # print(len(self.temp_indexes))
+        # print(self.temp_indexes)
+        for i in range(1,len(self.temp_indexes)):
+            if(self.total_weight + self.item_weights[self.temp_indexes[i]] > self.Capacity):
+                pass
+            else:
+                self.total_weight += self.item_weights[self.temp_indexes[i]]
+                self.total_value += self.item_values[self.temp_indexes[i]]
+                # solution[self.temp_indexes[i]] = True
+                solution[i] = True
+
         # THE CODE SHOULD: take the items in descending
         # profit-to-weight ratio order (by using temp_indexes) and,
-        # if an item fits, add it to the knapscak, and
+        # if an item fits, add it to the knapsack, and
         # do not stop at the first item that doesn't fit
         # - but keep going until all items have been tried.
         
@@ -29,7 +39,7 @@ class greedy(knapsack):
         # is not what you expected, if could be because you mapped to the sorted
         # order TWICE
         # Use
-        #   solution[i] = Trye
+        #   solution[i] = True
         # in order to "pack" the iths most value-dense item,
         # not solution[temp_indexes[i]]
         
