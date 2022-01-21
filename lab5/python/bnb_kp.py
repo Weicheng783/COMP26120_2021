@@ -158,7 +158,7 @@ class bnb(knapsack):
         # return
         # print(self.QueueSize)
         self.insert(aaa)
-        print("CB ", current_best)
+        print("Current best solution=" + str(current_best))
 
         # print(self.QueueSize)
 
@@ -170,7 +170,7 @@ class bnb(knapsack):
         # compute its value and its bound
         # put current_best = to its value
         # store it in the priority queue
-  
+
         # LOOP until queue is empty or upper bound is not greater than current_best:
         #   remove the first item in the queue
         #   construct two children, 1 with a 1 added, 1 with a O added
@@ -195,7 +195,7 @@ class bnb(knapsack):
             # onee[self.pqueue[self.QueueSize].fixed + 1] = True
             # zeroe[self.pqueue[self.QueueSize].fixed + 1] = False
 
-            print("count", count)
+            # print("count", count)
 
             for i in range(0,len(final_sol)):
                 if(i == count):
@@ -212,8 +212,8 @@ class bnb(knapsack):
                     zeroe.append(final_sol[i])
                 else:
                     zeroe.append(None)
-            print("onee",onee)
-            print("zeroe",zeroe)
+            # print("onee",onee)
+            # print("zeroe",zeroe)
             # print("final",final_sol)
 
             # print(numberr)
@@ -263,42 +263,48 @@ class bnb(knapsack):
                     one.bound = current1[1]
                     one.fixed = count
                     current_best1 = current1[0]
-                else:
-                    print("1 failed", current1[0], "to", current_best)
+                # else:
+                #     print("1 failed", current1[0], "to", current_best)
                 # self.print_sol(one)
                 if(current0[0] > current_best_cp):
                     zero.val = current0[0]
                     zero.bound = current0[1]
                     zero.fixed = count
                     current_best0 = current0[0]
-                else:
-                    print("0 failed", current0[0], "to", current_best)
+                # else:
+                    # print("0 failed", current0[0], "to", current_best)
 
                 if(current_best1 >= current_best0):
                     current_best = current_best1
                     final_sol = one.solution_vec
-                    self.print_sol(one)
+                    # self.print_sol(one)
                     self.insert(one)
                 else:
                     current_best = current_best0
                     final_sol = zero.solution_vec
-                    self.print_sol(zero)
+                    # self.print_sol(zero)
                     self.insert(zero)
 
+            print("Current best solution=" + str(current_best))
                 # print(self.QueueSize + 1)
-        print("CB ", current_best)
+        print("Current best solution=" + str(current_best))
+        # temp_sol = [None]*(self.Nitems + 1)
+        # for i in range(0,len(final_sol)):
+        #     if(final_sol[i] == True):
+        #         temp_sol[self.temp_indexes[i]] = True
+        #     else:
+        #         temp_sol[self.temp_indexes[i]] = False
+
         return final_sol
 
         # YOUR CODE GOES HERE
-        
+
     def copy_array(self, array_from, array_to):
         # This copies Nitems elements of one boolean array to another
         # Notice it ignores the 0th item of the array
         for i in range(1, self.Nitems+1):
             array_to[i] = array_from[i]
 
-        
-        
 knapsk = bnb(sys.argv[1])
 assert(NITEMS >= knapsk.Nitems)
 final_sol = [False]*(knapsk.Nitems + 1)
