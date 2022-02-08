@@ -73,13 +73,13 @@ class bnb(knapsack):
         self.QueueSize = self.QueueSize-1
         self.downheap(1)
         return head
-        
+
     # End priority queue functions
-    
+
     def print_sol(self,sol):
         # prints a solution in the form 000100xxx etc
         # with x's denoting the part of the solution not yet fixed (determined)
-        
+
         print("%d %g " % (sol.val,sol.bound), end="")
         for i in range(1, sol.fixed + 1):
             if (sol.solution_vec[i]):
@@ -91,10 +91,10 @@ class bnb(knapsack):
             print("x", end="")
             i = i + 1;
         print("")
-        
+
     def frac_bound(self, sol, fix):
         # Updates the values sol.val and sol.bound
-        
+
         # Computes the fractional knapsack upper bound
         # given a binary vector of items (sol->solution_vec),
         # where the first
@@ -109,6 +109,8 @@ class bnb(knapsack):
 
         # Everything above assumes items are sorted in decreasing
         # profit/weight ratio
+        if(fix == len(sol.solution_vec)):
+            return [0,0]
 
         totalp = 0 # profit total
         totalw =0 # weight total
@@ -126,23 +128,29 @@ class bnb(knapsack):
         sol.val = totalp
         # print("%g %d" % (totalp, totalw))
         # print(sol.val)
-        
+
         # add in items the rest of the items until capacity is exceeded
         i = fix + 1
         while (i <= self.Nitems and totalw < self.Capacity):
             totalw = totalw + self.item_weights[self.temp_indexes[i]]
             totalp = totalp + self.item_values[self.temp_indexes[i]]
             i = i + 1
-        
+
         # if over-run the capacity, adjust profit total by substracting that overrun fractio of the last item
         if (totalw > self.Capacity):
             i = i - 1
             totalp = totalp - ((totalw - self.Capacity)/(self.item_weights[self.temp_indexes[i]])*self.item_values[self.temp_indexes[i]])
         sol.bound = totalp
-        # print(sol.bound)
+
         return [sol.val, sol.bound]
-        
+
     def branch_and_bound(self, final_sol):
+        # branch and bound
+
+        # start with the empty solution vector
+        # compute its value and its bound
+        # put current_best = to its value
+        # store it in the priority queue
         self.pqueue[0] = struc_sol() # set a blank first element
 
         aaa = struc_sol()
@@ -155,21 +163,9 @@ class bnb(knapsack):
         aaa.bound = current[1]
 
         current_best = aaa.val
-        # return
-        # print(self.QueueSize)
+
         self.insert(aaa)
         print("Current best solution=" + str(current_best))
-
-        # print(self.QueueSize)
-
-        # print(current_best)
-        # branch and bound
-        # return
-
-        # start with the empty solution vector
-        # compute its value and its bound
-        # put current_best = to its value
-        # store it in the priority queue
 
         # LOOP until queue is empty or upper bound is not greater than current_best:
         #   remove the first item in the queue
@@ -181,123 +177,67 @@ class bnb(knapsack):
         #       if value > current_best, set current_best to it, and copy child to final_sol
         #       add child to the queue
         # RETURN
-        count = 0
 
-        while (self.QueueSize != 0 and self.pqueue[self.QueueSize].bound > current_best):
-            self.removeMax()
-            count += 1
-            onee = []
-            zeroe = []
-            # onee = final_sol
-            # zeroe = final_sol
-            # print(self.QueueSize)
-            # print(len(self.pqueue))
-            # onee[self.pqueue[self.QueueSize].fixed + 1] = True
-            # zeroe[self.pqueue[self.QueueSize].fixed + 1] = False
+        while (self.QueueSize != 0):
+            head = self.removeMax()
+            count = head.fixed
 
-            # print("count", count)
-
-            for i in range(0,len(final_sol)):
-                if(i == count):
-                    onee.append(True)
-                elif(i < count):
-                    onee.append(final_sol[i])
-                else:
-                    onee.append(None)
-
-            for i in range(0,len(final_sol)):
-                if(i == count):
-                    zeroe.append(False)
-                elif(i < count):
-                    zeroe.append(final_sol[i])
-                else:
-                    zeroe.append(None)
-            # print("onee",onee)
-            # print("zeroe",zeroe)
-            # print("final",final_sol)
-
-            # print(numberr)
-            # onee[numberr] = True
-            # zeroe[numberr] = False
-            # print("onee",onee)
-
-            # print("fixed ",self.pqueue[self.QueueSize].fixed)
-
-            one = struc_sol()
-            one.solution_vec = onee
-
-            zero = struc_sol()
-            zero.solution_vec = zeroe
-            # self.print_sol(zero)
-            # print(self.pqueue[self.QueueSize].fixed + 1)
-            # print(onee)
-            # self.print_sol(one)
-            # self.print_sol(zero)
-            current0 = self.frac_bound(zero,count)
-            current1 = self.frac_bound(one,count)
-
-            if(current0[1] == False and current1[1] == False):
+            if(head.bound < current_best):
                 pass
-            elif(current1[1] == False):
-                if(current0[0] > current_best):
-                    zero.val = current0[0]
-                    zero.bound = current0[1]
-                    zero.fixed = count
-                    current_best = current0[0]
-                    final_sol = zero.solution_vec
-                    self.insert(zero)
-            elif(current0[1] == False):
-                if(current1[0] > current_best):
-                    one.val = current1[0]
-                    one.bound = current1[1]
-                    one.fixed = count
-                    current_best = current1[0]
-                    final_sol = one.solution_vec
-                    self.insert(one)
             else:
-                current_best_cp = current_best
-                current_best1 = 0
-                current_best0 = 0
-                if(current1[0] > current_best_cp):
-                    one.val = current1[0]
-                    one.bound = current1[1]
-                    one.fixed = count
-                    current_best1 = current1[0]
-                # else:
-                #     print("1 failed", current1[0], "to", current_best)
-                # self.print_sol(one)
-                if(current0[0] > current_best_cp):
+                if(head.val >= current_best):
+                    current_best = head.val
+                    final_sol = head.solution_vec
+                    print("Current best solution=" + str(current_best))
+
+                if(count != len(final_sol)):
+
+                    count += 1
+                    onee = []
+                    zeroe = []
+
+                    for i in range(0,len(final_sol)):
+                        if(i == count):
+                            onee.append(True)
+                        elif(i < count):
+                            onee.append(head.solution_vec[i])
+                        else:
+                            onee.append(None)
+
+                    for i in range(0,len(final_sol)):
+                        if(i == count):
+                            zeroe.append(False)
+                        elif(i < count):
+                            zeroe.append(head.solution_vec[i])
+                        else:
+                            zeroe.append(None)
+
+                    zero = struc_sol()
+                    zero.solution_vec = zeroe
+
+                    one = struc_sol()
+                    one.solution_vec = onee
+
+                    current0 = self.frac_bound(zero,count)
                     zero.val = current0[0]
                     zero.bound = current0[1]
                     zero.fixed = count
-                    current_best0 = current0[0]
-                # else:
-                    # print("0 failed", current0[0], "to", current_best)
 
-                if(current_best1 >= current_best0):
-                    current_best = current_best1
-                    final_sol = one.solution_vec
-                    # self.print_sol(one)
-                    self.insert(one)
+                    current1 = self.frac_bound(one,count)
+                    one.val = current1[0]
+                    one.bound = current1[1]
+                    one.fixed = count
+
+                    if(current0[1] != False and current0[1] >= current_best):
+                        self.insert(zero)
+
+                    if(current1[1] != False and current1[1] >= current_best):
+                        self.insert(one)
                 else:
-                    current_best = current_best0
-                    final_sol = zero.solution_vec
-                    # self.print_sol(zero)
-                    self.insert(zero)
+                    pass
 
-            print("Current best solution=" + str(current_best))
-                # print(self.QueueSize + 1)
         print("Current best solution=" + str(current_best))
-        # temp_sol = [None]*(self.Nitems + 1)
-        # for i in range(0,len(final_sol)):
-        #     if(final_sol[i] == True):
-        #         temp_sol[self.temp_indexes[i]] = True
-        #     else:
-        #         temp_sol[self.temp_indexes[i]] = False
-
         return final_sol
-
-        # YOUR CODE GOES HERE
 
     def copy_array(self, array_from, array_to):
         # This copies Nitems elements of one boolean array to another
@@ -307,8 +247,9 @@ class bnb(knapsack):
 
 knapsk = bnb(sys.argv[1])
 assert(NITEMS >= knapsk.Nitems)
-final_sol = [False]*(knapsk.Nitems + 1)
+final_sol = [None]*(knapsk.Nitems + 1)
 knapsk.sort_by_ratio()
+# print("tempIndex",knapsk.temp_indexes)
 
 knapsk.pqueue = [None]*SIZE
 
