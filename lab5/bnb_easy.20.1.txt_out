@@ -1,0 +1,46 @@
+7	48	0.145833
+9	49	0.183673
+15	47	0.319149
+16	21	0.761905
+37	39	0.948718
+41	39	1.051282
+13	12	1.083333
+37	33	1.121212
+46	38	1.210526
+49	40	1.225000
+45	32	1.406250
+31	21	1.476190
+34	16	2.125000
+28	12	2.333333
+49	18	2.722222
+36	11	3.272727
+8	2	4.000000
+24	3	8.000000
+30	3	10.000000
+43	3	14.333333
+Current best solution=0
+Current best solution=0
+Current best solution=48
+Current best solution=97
+Current best solution=144
+Current best solution=165
+Current best solution=204
+Current best solution=243
+Current best solution=255
+Current best solution=288
+Current best solution=326
+Current best solution=366
+Current best solution=366
+Current best solution=375
+Current best solution=375
+Current best solution=375
+Current best solution=375
+Current best solution=375
+Current best solution=377
+Current best solution=377
+Current best solution=377
+Current best solution=377
+Current best solution=377
+Branch and Bound Solution of Knapack is:
+Pack items: 1 2 5 8 9 11 12 14 17 18 20 
+value=377 weight=296 <= Capacity=296: Feasible

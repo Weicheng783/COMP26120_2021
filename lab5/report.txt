@@ -4,48 +4,81 @@ Dynamic Programming
 Why does the 0/1 Knapsack Problem have the three necessary properties for dynamic programming?
 
 1. Simple Subproblems
+We divide the subproblems easy enough to solve directly in a constant time, in this case it will be the calculation of each maximum values for a given number of items in a knapsack.
 
 2. Subproblem Optimality
+In this problem, we maximise the value...
 
 3. Subproblem Overlap
-
+In 0/1 Knapsack Problem of DP solution, we need to use these previous checked values to ensure the value of each step is maximised (by comparing [the maximum value we could make with the first i - 1 items] with [the maximum value we could make by adding the value of the ith item, vi, to the maximum value we could make using the first i - 1 items and a maximum weight of w - wi.] ), this is different from divide-and-conquer.
+Previously searched answers saved in an array table that can be used for further problems.
+We store the already searched steps (partial answers) in an array table, the time complexity of array table look-up is O(1) so it makes retrieval fast.
 
 Greedy
 ======
 
 1.  Why is a greedy approach not necessarily optimal for 0/1 Knapsack?
+For 0/1 Knapsack problem, this greedy approach is flawed.
+As its name suggests, its "greedy" methodology ensures that the largest value/ largest value to weight ratio items selected first, it comes clear that selection of one heavy item is less valued than selecting two lighter items which results the total value is more valuable.
 
 2.  Is the greedy approach optimal for the Fractional Knapsack problem?  Explain your reasoning.
+For the largest value to weight ratio, it is optimal.
 
 Testing
 =======
 
 1.  Why can't you use full enumeration for large instances?
+[Suppose one evaluation of a solutions takes 1 microsecond (10 e -6 second), how large an instance do you think can be practically solved in an hour?  Justify your answer.]
 
-Suppose one evaluation of a solutions takes 1 microsecond, how large an instance do you think can be practically solved in an hour?  Justify your answer.
+Enumeration will search through all possible answers avaiable, this operation takes time and space especially when the problem size is large, and modern computers can not do all enumeration for this reason.
+
+10*(10^6)*1*60*60 = 3.6*(10^10) instances
+
 
 2.  Fill in the table below for each test set, noting whether or not you killed the algorithm.  Result should indicate whether the correct optimal solution has been found.  This should be 377 for easy.20.1.txt, 4077 for easy.200.4.txt, 126968 for hard1.200.11.txt and 1205259 for hard1.2000.1.txt.  You can generate this output using test.sh if you wish.
+
+*PYTHON* SOLUTION
 
 ===========================================
 easy.20.1.txt 
 ===========================================
 Algorithm |      Optimal Value       | Time Taken  | Result
 
+enum  377  2.591s  correct
+bnb  377  0.139s  correct
+dp  377  0.136s  correct
+greedy  368  0.165s  incorrect - not expected to be correct
+
 ===========================================
 easy.200.4.txt
 ===========================================
 Algorithm |      Optimal Value       | Time Taken  | Result
+
+enum      | -                        | 1m0.058s    | - (timed out for 60s)
+bnb       | 4077                     | 0m0.282s    | Yes
+dp        | 4077                     | 0m0.515s    | Yes
+greedy    | 4075                     | 0m0.261s    | incorrect ? (not expected to be Yes)
+
 
 ===========================================
 hard1.200.11.txt
 ===========================================
 Algorithm |      Optimal Value       | Time Taken  | Result
 
+enum      | -                        | 2m0.096s    | - (timed out for 120s)
+bnb       | 126746 (after 120s)      | 2m0.119s    | ?
+dp        | 126968                   | 0m10.622s    | Yes
+greedy    | 126579                   | 0m0.262s    | ?
+
 ===========================================
 hard1.2000.1.txt
 ===========================================
 Algorithm |      Optimal Value       | Time Taken  | Result
 
+enum      | -                        | 2m0.081s    | - (timed out for 120s)
+bnb       | 1205175 (after 120s)     | 2m0.088s    | ?
+dp        | -                        | 2m3.550s    | No (timed out for 120s, not generated partial sol)
+greedy    | 1205167                  | 0m0.432s    | ?
 
 So for instance if you are running the program using the bnb algorithm on the hard1.200.11.txt and kill the program after it has been running for 1 minute and the best solution at that point has 126756 in the knapsack then you should note that you killed the program and write
 

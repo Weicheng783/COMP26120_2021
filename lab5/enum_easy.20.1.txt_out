@@ -1,0 +1,82 @@
+item	W	V
+1	37	39
+2	7	48
+3	43	3
+4	24	3
+5	9	49
+6	13	12
+7	30	3
+8	31	21
+9	8	2
+10	49	18
+11	49	40
+12	46	38
+13	45	32
+14	15	47
+15	28	12
+16	36	11
+17	16	21
+18	37	33
+19	34	16
+20	41	39
+296
+9.5367431640625e-05 %, Current Best Value: 39
+0.00019073486328125 %, Current Best Value: 55
+0.000286102294921875 %, Current Best Value: 72
+0.0003814697265625 %, Current Best Value: 88
+0.000667572021484375 %, Current Best Value: 93
+0.000762939453125 %, Current Best Value: 109
+0.00152587890625 %, Current Best Value: 120
+0.002288818359375 %, Current Best Value: 121
+0.0030517578125 %, Current Best Value: 132
+0.0034332275390625 %, Current Best Value: 135
+0.003719329833984375 %, Current Best Value: 140
+0.003814697265625 %, Current Best Value: 156
+0.00457763671875 %, Current Best Value: 167
+0.005340576171875 %, Current Best Value: 168
+0.006103515625 %, Current Best Value: 179
+0.009918212890625 %, Current Best Value: 188
+0.01068115234375 %, Current Best Value: 199
+0.011444091796875 %, Current Best Value: 200
+0.01220703125 %, Current Best Value: 211
+0.018310546875 %, Current Best Value: 217
+0.022125244140625 %, Current Best Value: 226
+0.02288818359375 %, Current Best Value: 237
+0.023651123046875 %, Current Best Value: 238
+0.03509521484375 %, Current Best Value: 239
+0.035858154296875 %, Current Best Value: 240
+0.04119873046875 %, Current Best Value: 245
+0.041961669921875 %, Current Best Value: 246
+0.046443939208984375 %, Current Best Value: 250
+0.046539306640625 %, Current Best Value: 266
+0.144195556640625 %, Current Best Value: 268
+0.24175643920898438 %, Current Best Value: 271
+0.3394126892089844 %, Current Best Value: 273
+0.827789306640625 %, Current Best Value: 278
+1.0230064392089844 %, Current Best Value: 283
+1.58538818359375 %, Current Best Value: 286
+1.586151123046875 %, Current Best Value: 287
+1.59759521484375 %, Current Best Value: 288
+1.598358154296875 %, Current Best Value: 289
+1.60369873046875 %, Current Best Value: 294
+1.604461669921875 %, Current Best Value: 295
+1.6089439392089844 %, Current Best Value: 299
+1.609039306640625 %, Current Best Value: 315
+1.8042564392089844 %, Current Best Value: 320
+12.839412689208984 %, Current Best Value: 321
+14.084625244140625 %, Current Best Value: 323
+14.08538818359375 %, Current Best Value: 334
+14.086151123046875 %, Current Best Value: 335
+14.09759521484375 %, Current Best Value: 336
+14.098358154296875 %, Current Best Value: 337
+14.10369873046875 %, Current Best Value: 342
+14.104461669921875 %, Current Best Value: 343
+14.108943939208984 %, Current Best Value: 347
+14.110469818115234 %, Current Best Value: 359
+14.304256439208984 %, Current Best Value: 368
+39.102935791015625 %, Current Best Value: 370
+39.298152923583984 %, Current Best Value: 375
+39.395809173583984 %, Current Best Value: 377
+100 %, Current Best Value: 377
+Pack items: 1 2 5 8 9 11 12 14 17 18 20 
+value=377 weight=296 <= Capacity=296: Feasible
