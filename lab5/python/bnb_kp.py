@@ -182,14 +182,17 @@ class bnb(knapsack):
             head = self.removeMax()
             count = head.fixed
 
+            # We need to prune the subtree when its potential upper bound is less than current value
             if(head.bound < current_best):
                 pass
             else:
+                # We update values when we enter left subtree or found head.val greater than or equal to the current best value
                 if(head.val >= current_best):
                     current_best = head.val
                     final_sol = head.solution_vec
                     print("Current best solution=" + str(current_best))
 
+                # This is for restricting the total number of items to a correct number
                 if(count != len(final_sol)):
 
                     count += 1
@@ -228,12 +231,14 @@ class bnb(knapsack):
                     one.bound = current1[1]
                     one.fixed = count
 
+                    # If the potential solution is valid and it has the potential to overpass the current, we insert them accordingly
                     if(current0[1] != False and current0[1] >= current_best):
                         self.insert(zero)
 
                     if(current1[1] != False and current1[1] >= current_best):
                         self.insert(one)
                 else:
+                    # This is for clean the queue after all items are scanned, or can use to perform backtrack
                     pass
 
         print("Current best solution=" + str(current_best))

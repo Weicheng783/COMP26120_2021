@@ -43,9 +43,10 @@ class enum_knapsack(knapsack):
                     temp_sol.append(best_solution[i])
 
             if(self.next_binary(solution, self.Nitems)):
-                # print(temp_sol)
+                # This is where the string overflows (finishes)
                 print("100 %, Current Best Value: " + str(best_value))
                 # print(temp_sol[len(temp_sol)-1-self.Nitems:len(temp_sol)])
+                # Printing the correct range
                 return temp_sol[len(temp_sol)-1-self.Nitems:len(temp_sol)]
 
     def next_binary(self, sol, Nitems):

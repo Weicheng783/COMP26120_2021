@@ -7,10 +7,10 @@ Why does the 0/1 Knapsack Problem have the three necessary properties for dynami
 We divide the subproblems easy enough to solve directly in a constant time, in this case it will be the calculation of each maximum values for a given number of items in a knapsack.
 
 2. Subproblem Optimality
-In this problem, we maximise the value...
+In this problem, we maximised the value of each simple subproblem, this is the optimum solution for each individual subproblem.
 
 3. Subproblem Overlap
-In 0/1 Knapsack Problem of DP solution, we need to use these previous checked values to ensure the value of each step is maximised (by comparing [the maximum value we could make with the first i - 1 items] with [the maximum value we could make by adding the value of the ith item, vi, to the maximum value we could make using the first i - 1 items and a maximum weight of w - wi.] ), this is different from divide-and-conquer.
+In 0/1 Knapsack Problem of DP solution, we need to use these previous checked values to ensure the value of each step is maximised (by comparing [the maximum value we could make with the first i - 1 items] with [the maximum value we could make by adding the value of the ith item, vi, to the maximum value we could make using the first i - 1 items and a maximum weight of w - wi.] ), this is different from divide-and-conquer. And use the previous checked values to calculate a new answer.
 Previously searched answers saved in an array table that can be used for further problems.
 We store the already searched steps (partial answers) in an array table, the time complexity of array table look-up is O(1) so it makes retrieval fast.
 
@@ -19,10 +19,12 @@ Greedy
 
 1.  Why is a greedy approach not necessarily optimal for 0/1 Knapsack?
 For 0/1 Knapsack problem, this greedy approach is flawed.
-As its name suggests, its "greedy" methodology ensures that the largest value/ largest value to weight ratio items selected first, it comes clear that selection of one heavy item is less valued than selecting two lighter items which results the total value is more valuable.
+As its name suggests, its "greedy" methodology ensures that the largest value to weight ratio items selected first, it comes clear that selection of one heavy item is less valued than selecting two lighter items which results the total value is more valuable.
 
 2.  Is the greedy approach optimal for the Fractional Knapsack problem?  Explain your reasoning.
-For the largest value to weight ratio, it is optimal.
+For the largest value to weight ratio method, it is optimal.
+This is because we can always select the most valuable fraction of items into our knapsack.
+The selection process begins with the highest ratioed items, and select as much as possible, when this item is empty, we then select less ratioed items but just below that item. We repeat this process until the bag is full.
 
 Testing
 =======
@@ -30,9 +32,9 @@ Testing
 1.  Why can't you use full enumeration for large instances?
 [Suppose one evaluation of a solutions takes 1 microsecond (10 e -6 second), how large an instance do you think can be practically solved in an hour?  Justify your answer.]
 
-Enumeration will search through all possible answers avaiable, this operation takes time and space especially when the problem size is large, and modern computers can not do all enumeration for this reason.
+Enumeration will search through all possible answers avaiable, this operation takes time and space especially when the problem size is large, and modern computers can not do all enumeration for this reason, such an astronomical figure.
 
-10*(10^6)*1*60*60 = 3.6*(10^10) instances
+10*(10^6)*1*60*60 = 3.6*(10^10) instances in an hour.
 
 
 2.  Fill in the table below for each test set, noting whether or not you killed the algorithm.  Result should indicate whether the correct optimal solution has been found.  This should be 377 for easy.20.1.txt, 4077 for easy.200.4.txt, 126968 for hard1.200.11.txt and 1205259 for hard1.2000.1.txt.  You can generate this output using test.sh if you wish.
@@ -93,18 +95,26 @@ Note that some knapsack implementations generate candidate solutions as they go 
 
 3.  Which instances does greedy solve optimally?
 
-Does dynamic programming work on all instances and why/why not?
+Unfortunately, none of the tested instances is solved optimally by using greedy. This is because the problem is 0/1 Knapsack problem, not fractional Knapsack problem as I indicated earlier.
 
-Does branch-and-bound come to a stop on all instances in reasonable time?
+(i.) Does dynamic programming work on all instances and why/why not?
+Yes, dp solution works on all instances.
+We can see the dynamic programming as filling the table for all enumerative cases, but it is quicker than just enumerate all cases without note anything.
+This ensures we searched all possible values and upper bounds and finally got a correct solution. But sometimes it takes a bit of time to solve it as in "hard1.2000.1" cases.
+
+(ii.) Does branch-and-bound come to a stop on all instances in reasonable time?
+Generally yes for small instances, but for large instances no, bnb solutions are quite take time to explore as it uses the depth-first method to compare and iterate, which means it takes time for insertions and removals of elements in priority queues.
 
 4.  Can you explain WHY the hard1 instances are easy or hard (cause problems) for
     i) greedy
+Greedy always pack the largest ratioed (value/weight) items into knapsack first, so it ignores the possible chances of two lighter weighted items are more valued than this approach selected item, which results incorrect answers. In hard1 instances, there are lots of these cases happen.
     ii) branch-and-bound
+BnB solution is hard for hard1 instances as it contains lots of items, this means the number of elements in the priority queue and the search depth would be large, it causes problems as the search tree can be expanded expontionally even using pruning methods.
     iii) dynamic programming
-
+DP solution is not easy affected by hard1 instances as its correctness can be proved, but it takes quite a few time to solve.
 
 5.  The airline has problems of size 500-2000 of similar type to the hard1 instances.  Which algorithms do you recommend using and why?
+dynamic programming, as this is the most reliable method for large instances.
 
-What should they do in the case the algorihm runs out of time?
-
-
+What should they do in the case the algorithm runs out of time?
+For dynamic programming, save the table and restart the algorithm. Or to use both divide-and-conquer and dynamic programming to speed up the execution speed.
